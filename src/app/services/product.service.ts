@@ -12,12 +12,41 @@ export class ProductService {
 
   private http = inject(HttpClient);
 
-  products$ = this
-                .http
-                .get<Product[]>(this.baseUrl)
-                .pipe(
-                  delay(1500), // For the demo
-                  tap(console.table)
-                )
+  products$: Observable<Product[]>;
+
+  constructor() {
+    this.initProducts();
+  }
+
+  resetList() {
+    this.initProducts();
+  }
+
+  deleteProduct(id: number): Observable<void> {
+    return this.http.delete<void>(this.baseUrl + id);
+  }
+
+  insertProduct(newProduct: Product): Observable<Product> {
+    newProduct.modifiedDate = new Date();
+    return this.http.post<Product>(this.baseUrl, newProduct);
+  }
+
+  private initProducts() {
+    this.products$ = this
+      .http
+      .get<Product[]>(this.baseUrl)
+      .pipe(
+        tap(console.table),
+        shareReplay()
+      )
+  }
+
+  getProductById(id: number): Observable<Product> {
+     return this
+              .products$
+              .pipe(
+                map(products => products.find(product => product.id === id))
+              )
+  }
 
 }

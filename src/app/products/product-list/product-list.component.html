@@ -14,6 +14,11 @@
             </li>
         }
     </ul>
+
+    <div class="right">
+        <a routerLink="insert">Create new product...</a>
+    </div>
+
     <div>
         <button (click)="previousPage()" [disabled]="start === 0">
             Previous Page
@@ -26,5 +31,3 @@
 } @else {
     <div class="loading"></div>
 }
-
-<app-product-detail [product]="selectedProduct"></app-product-detail>
